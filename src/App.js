@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './BookList.css';
+import LoginPage from './LoginPage';
 
 function BooksComponent() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false); 
   
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -44,7 +46,11 @@ function BooksComponent() {
         try {
             const response = await axios.post('https://sunlit-apricot-404519.uc.r.appspot.com/saveBook', postData);
             console.log('Response:', response.data);
-            displayAllBooks()
+            displayAllBooks();
+            // Clear the input fields after successful submission
+            setTitle('');
+            setAuthor('');
+            setYear('');
         } catch (error) {
             console.error('Error posting data:', error);
         }
@@ -67,7 +73,10 @@ function BooksComponent() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-
+//add logged in feather.
+  if (!loggedIn) {
+    return <LoginPage setLoggedIn={setLoggedIn} />;
+  }
   // this component displays a list of books and has a form for posting a new book
   return (
     <div className="book-list">
